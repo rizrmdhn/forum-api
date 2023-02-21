@@ -30,6 +30,8 @@ describe('GetAuthenticationsUseCase', () => {
             .mockImplementation(() => Promise.resolve(expectedAuthentication.accessToken));
         mockAuthenticationTokenManager.createRefreshToken = jest.fn()
             .mockImplementation(() => Promise.resolve(expectedAuthentication.refreshToken));
+        mockUserRepository.getIdByUsername = jest.fn()
+            .mockImplementation(() => Promise.resolve('user-123'));
         mockAuthenticationRepository.addToken = jest.fn()
             .mockImplementation(() => Promise.resolve());
 
@@ -48,8 +50,9 @@ describe('GetAuthenticationsUseCase', () => {
         expect(actualAuthentication).toStrictEqual(expectedAuthentication);
         expect(mockUserRepository.getPasswordByUsername).toBeCalledWith('dicoding');
         expect(mockPasswordHash.compare).toBeCalledWith('secret', 'encrypted_password');
-        expect(mockAuthenticationTokenManager.createAccessToken).toBeCalledWith({ username: 'dicoding' });
-        expect(mockAuthenticationTokenManager.createAccessToken).toBeCalledWith({ username: 'dicoding' });
+        expect(mockUserRepository.getIdByUsername).toBeCalledWith('dicoding');
+        expect(mockAuthenticationTokenManager.createAccessToken).toBeCalledWith({ username: 'dicoding', id: 'user-123' });
+        expect(mockAuthenticationTokenManager.createAccessToken).toBeCalledWith({ username: 'dicoding', id: 'user-123' });
         expect(mockAuthenticationRepository.addToken).toBeCalledWith(expectedAuthentication.refreshToken);
     });
 });

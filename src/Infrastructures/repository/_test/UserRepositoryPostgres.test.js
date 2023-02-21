@@ -98,4 +98,30 @@ describe('UserRepositoryPostgres', () => {
       expect(password).toBe('secret_password');
     });
   });
+
+  describe('getIdByUsername', () => {
+    it('should throw InvariantError when user not found', () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
+
+      // Action & Assert
+      return expect(userRepositoryPostgres.getIdByUsername('dicoding'))
+        .rejects
+        .toThrowError(InvariantError);
+    });
+
+    it('should return username id when user is found', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
+      await UsersTableTestHelper.addUser({
+        id: 'user-123', username: 'dicoding', fullname: 'Dicoding Indonesia',
+      });
+
+      // Action
+      const userId = await userRepositoryPostgres.getIdByUsername('dicoding');
+
+      // Assert
+      expect(userId).toEqual('user-123');
+    });
+  });
 });

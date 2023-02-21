@@ -25,7 +25,7 @@ const CommentTableTestHelper = {
     },
 
     async cleanTable() {
-        await pool.query('TRUNCATE TABLE comment');
+        await pool.query('TRUNCATE TABLE comment CASCADE');
     }
 };
 

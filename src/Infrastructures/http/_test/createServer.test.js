@@ -6,13 +6,13 @@ const createServer = require('../createServer');
 const AuthenticationTokenManager = require('../../../Applications/security/AuthenticationTokenManager');
 
 describe('HTTP server', () => {
-    afterAll(async () => {
-        await pool.end();
-    });
-
     afterEach(async () => {
         await UsersTableTestHelper.cleanTable();
         await AuthenticationsTableTestHelper.cleanTable();
+    });
+
+    afterAll(async () => {
+        await pool.end();
     });
 
     it('should response 404 when request unregistered route', async () => {
@@ -30,29 +30,6 @@ describe('HTTP server', () => {
     });
 
     describe('when POST /users', () => {
-        it('should response 201 and persisted user', async () => {
-            // Arrange
-            const requestPayload = {
-                username: 'dicoding',
-                password: 'secret',
-                fullname: 'Dicoding Indonesia',
-            };
-            const server = await createServer(container);
-
-            // Action
-            const response = await server.inject({
-                method: 'POST',
-                url: '/users',
-                payload: requestPayload,
-            });
-
-            // Assert
-            const responseJson = JSON.parse(response.payload);
-            expect(response.statusCode).toEqual(201);
-            expect(responseJson.status).toEqual('success');
-            expect(responseJson.data.addedUser).toBeDefined();
-        });
-
         it('should response 400 when request payload not contain needed property', async () => {
             // Arrange
             const requestPayload = {
@@ -167,31 +144,20 @@ describe('HTTP server', () => {
             expect(responseJson.status).toEqual('fail');
             expect(responseJson.message).toEqual('username tidak tersedia');
         });
-    });
 
-    describe('when POST /authentications', () => {
-        it('should response 201 and new authentication', async () => {
+        it('should response 201 and persisted user', async () => {
             // Arrange
             const requestPayload = {
                 username: 'dicoding',
                 password: 'secret',
+                fullname: 'Dicoding Indonesia',
             };
             const server = await createServer(container);
-            // add user
-            await server.inject({
-                method: 'POST',
-                url: '/users',
-                payload: {
-                    username: 'dicoding',
-                    password: 'secret',
-                    fullname: 'Dicoding Indonesia',
-                },
-            });
 
             // Action
             const response = await server.inject({
                 method: 'POST',
-                url: '/authentications',
+                url: '/users',
                 payload: requestPayload,
             });
 
@@ -199,10 +165,11 @@ describe('HTTP server', () => {
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(201);
             expect(responseJson.status).toEqual('success');
-            expect(responseJson.data.accessToken).toBeDefined();
-            expect(responseJson.data.refreshToken).toBeDefined();
+            expect(responseJson.data.addedUser).toBeDefined();
         });
+    });
 
+    describe('when POST /authentications', () => {
         it('should response 400 if username not found', async () => {
             // Arrange
             const requestPayload = {
@@ -299,6 +266,40 @@ describe('HTTP server', () => {
             expect(responseJson.status).toEqual('fail');
             expect(responseJson.message).toEqual('username dan password harus string');
         });
+
+        it('should response 201 and new authentication', async () => {
+            // Arrange
+            const requestPayload = {
+                username: 'dicoding',
+                password: 'secret',
+            };
+            const server = await createServer(container);
+            // add user
+            await server.inject({
+                method: 'POST',
+                url: '/users',
+                payload: {
+                    username: 'dicoding',
+                    password: 'secret',
+                    fullname: 'Dicoding Indonesia',
+                },
+            });
+
+            // Action
+            const response = await server.inject({
+                method: 'POST',
+                url: '/authentications',
+                payload: requestPayload,
+            });
+
+            // Assert
+            const responseJson = JSON.parse(response.payload);
+            expect(response.statusCode).toEqual(201);
+            expect(responseJson.status).toEqual('success');
+            expect(responseJson.data.accessToken).toBeDefined();
+            expect(responseJson.data.refreshToken).toBeDefined();
+        });
+
     });
 
     describe('when PUT /authentications', () => {

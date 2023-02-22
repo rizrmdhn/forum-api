@@ -164,4 +164,99 @@ describe('/threads endpoint', () => {
             expect(responseJson.data.addedThread.title).toEqual('sebuah thread');
         });
     });
+
+    describe('when GET /threads/{threadId}', () => {
+        it('should response 404 if thread not found', async () => {
+            const loginPayload = {
+                username: 'dicoding',
+                password: 'secret',
+            };
+
+            const server = await createServer(container);
+
+            await server.inject({
+                method: 'POST',
+                url: '/users',
+                payload: {
+                    username: 'dicoding',
+                    password: 'secret',
+                    fullname: 'Dicoding Indonesia',
+                },
+            });
+
+            const authentication = await server.inject({
+                method: 'POST',
+                url: '/authentications',
+                payload: loginPayload,
+            });
+
+            const responseAuth = JSON.parse(authentication.payload);
+
+            const response = await server.inject({
+                method: 'GET',
+                url: '/threads/123',
+                headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+            });
+
+            const responseJson = JSON.parse(response.payload);
+            expect(response.statusCode).toEqual(404);
+            expect(responseJson.status).toEqual('fail');
+            expect(responseJson.message).toEqual('thread tidak ditemukan');
+        });
+
+        it('should response 200 and return detail thread', async () => {
+            const loginPayload = {
+                username: 'dicoding',
+                password: 'secret',
+            };
+
+            const server = await createServer(container);
+
+            await server.inject({
+                method: 'POST',
+                url: '/users',
+                payload: {
+                    username: 'dicoding',
+                    password: 'secret',
+                    fullname: 'Dicoding Indonesia',
+                },
+            });
+
+            const authentication = await server.inject({
+                method: 'POST',
+                url: '/authentications',
+                payload: loginPayload,
+            });
+
+            const responseAuth = JSON.parse(authentication.payload);
+
+            const thread = await server.inject({
+                method: 'POST',
+                url: '/threads',
+                payload: {
+                    title: 'sebuah thread',
+                    body: 'lorem ipsum dolorr sit amet',
+                },
+                headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+            });
+
+            const threadResponse = JSON.parse(thread.payload);
+
+            // Action
+            const response = await server.inject({
+                method: 'GET',
+                url: `/threads/${threadResponse.data.addedThread.id}`,
+                headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+            });
+
+            const responseJson = JSON.parse(response.payload);
+            expect(response.statusCode).toEqual(200);
+            expect(responseJson.status).toEqual('success');
+            expect(responseJson.data.thread.id).toEqual(threadResponse.data.addedThread.id);
+            expect(responseJson.data.thread.title).toEqual('sebuah thread');
+            expect(responseJson.data.thread.body).toEqual('lorem ipsum dolorr sit amet');
+            expect(responseJson.data.thread.username).toEqual('dicoding');
+            expect(Array.isArray(responseJson.data.thread.comments)).toBe(true);
+        });
+    });
 });

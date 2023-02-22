@@ -14,10 +14,19 @@ exports.up = (pgm) => {
             type: 'TEXT',
             notNull: true,
         },
+        is_deleted: {
+            type: 'BOOLEAN',
+            notNull: true,
+            defaultValue: false,
+        },
         ownerId: {
             type: 'VARCHAR(50)',
             notNull: true,
-        }
+        },
+        threadId: {
+            type: 'VARCHAR(50)',
+            notNull: true,
+        },
     });
 };
 

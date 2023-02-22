@@ -6,13 +6,13 @@ const createServer = require('../createServer');
 const AuthenticationTokenManager = require('../../../Applications/security/AuthenticationTokenManager');
 
 describe('HTTP server', () => {
+    afterAll(async () => {
+        await pool.end();
+    });
+
     afterEach(async () => {
         await UsersTableTestHelper.cleanTable();
         await AuthenticationsTableTestHelper.cleanTable();
-    });
-
-    afterAll(async () => {
-        await pool.end();
     });
 
     it('should response 404 when request unregistered route', async () => {

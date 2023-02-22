@@ -42,11 +42,11 @@ describe('ThreadRepositoryPostgres', () => {
                 const postedThread = await threadRepositoryPostgres.addThread(newThread);
 
                 // Assert
-                const threads = await ThreadsTableTestHelper.findThreadById('thread-123');
+                const threads = await ThreadsTableTestHelper.findThreadById('thread-h_123');
 
                 expect(threads).toHaveLength(1);
                 expect(postedThread).toStrictEqual(new PostedThread({
-                    id: 'thread-123',
+                    id: 'thread-h_123',
                     title: 'sebuah thread',
                     owner: 'user-123',
                 }));
@@ -75,6 +75,28 @@ describe('ThreadRepositoryPostgres', () => {
                 // Action & Assert
                 await expect(threadRepositoryPostgres.checkAvailabilityThread('thread-123'))
                     .resolves.not.toThrow(NotFoundError);
+            });
+        });
+
+        describe('getDetailThread function', () => {
+            it('should get detail thread', async () => {
+                const threadRepository = new ThreadRepositoryPostgres(pool, {});
+                const userPayload = { id: 'user-123', username: 'dicoding' };
+                const threadPayload = {
+                    id: 'thread-123',
+                    title: 'sebuah judul thread',
+                    body: 'sebuah thread',
+                    owner: 'user-123',
+                };
+                await UsersTableTestHelper.addUser(userPayload);
+                await ThreadsTableTestHelper.addThread(threadPayload);
+
+                const detailThread = await threadRepository.getDetailThread(threadPayload.id);
+
+                expect(detailThread.id).toEqual(threadPayload.id);
+                expect(detailThread.title).toEqual(threadPayload.title);
+                expect(detailThread.body).toEqual(threadPayload.body);
+                expect(detailThread.username).toEqual(userPayload.username);
             });
         });
     });

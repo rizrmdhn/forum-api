@@ -1,19 +1,19 @@
 class DetailThread {
     constructor(payload) {
         this._verifyPayload(payload);
-
-        const { thread } = payload;
-        this.thread = thread;
+        
+        const { threadId } = payload;
+        this.threadId = threadId;
     }
 
     _verifyPayload(payload) {
-        const { thread } = payload;
+        const { threadId } = payload;
 
-        if (!thread) {
+        if (!threadId) {
             throw new Error('DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
         }
 
-        if (typeof thread !== 'string') {
+        if (typeof threadId !== 'string') {
             throw new Error('DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
         }
     }

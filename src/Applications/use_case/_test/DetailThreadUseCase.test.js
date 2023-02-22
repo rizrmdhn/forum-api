@@ -1,5 +1,6 @@
 const CommentRepository = require('../../../Domains/comment/CommentRepository');
 const ThreadRepository = require('../../../Domains/thread/ThreadRepository');
+const ReplyRepository = require('../../../Domains/reply/ReplyRepository');
 const DetailThreadUseCase = require('../DetailThreadUseCase');
 
 describe('DetailThreadUseCase', () => {
@@ -35,16 +36,20 @@ describe('DetailThreadUseCase', () => {
 
         const mockThreadRepository = new ThreadRepository();
         const mockCommentRepository = new CommentRepository();
+        const mockReplyRepository = new ReplyRepository();
 
         mockThreadRepository.checkAvailabilityThread = jest.fn(() => Promise.resolve());
         mockThreadRepository.getDetailThread = jest.fn()
             .mockImplementation(() => Promise.resolve(expectedThread));
         mockCommentRepository.getCommentsThread = jest.fn()
             .mockImplementation(() => Promise.resolve(expectedComment));
+        mockReplyRepository.getCommentRepliesByThreadId = jest.fn()
+            .mockImplementation(() => Promise.resolve([]));
 
         const detailThreadUseCase = new DetailThreadUseCase({
             threadRepository: mockThreadRepository,
             commentRepository: mockCommentRepository,
+            replyRepository: mockReplyRepository,
         });
 
         const detailThread = await detailThreadUseCase.execute(useCasePayload);
@@ -65,12 +70,14 @@ describe('DetailThreadUseCase', () => {
                         id: 'comment-123',
                         username: 'dicoding',
                         date: '2021-08-08 14.00',
+                        replies: [],
                         content: 'sebuah comment',
                     },
                     {
                         id: 'comment-123',
                         username: 'dicoding',
                         date: '2021-08-08 14.00',
+                        replies: [],
                         content: '**komentar telah dihapus**',
                     },
                 ],

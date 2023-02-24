@@ -18,10 +18,7 @@ describe('AddReplyUseCase', () => {
         const expectedAddedReply = new PostedReply({
             id: 'reply-123',
             content: useCasePayload.content,
-            date: new Date().toISOString(),
             owner: useCasePayload.owner,
-            commentId: useCasePayload.commentId,
-            threadId: useCasePayload.threadId,
         });
 
         /** creating dependency of use case */
@@ -47,6 +44,8 @@ describe('AddReplyUseCase', () => {
 
         // Assert
         expect(addedReply).toStrictEqual(expectedAddedReply);
+        expect(mockThreadRepository.checkAvailabilityThread).toBeCalledWith(useCasePayload.threadId);
+        expect(mockCommentRepository.checkAvailabilityComment).toBeCalledWith(useCasePayload.commentId);
         expect(mockReplyRepository.addReply).toBeCalledWith(new PostReply(useCasePayload));
     });
 });

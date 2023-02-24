@@ -141,4 +141,40 @@ describe('ReplyRepositoryPostgres', () => {
             expect(replies).toHaveLength(1);
         });
     });
+
+    describe('getCommentRepliesByThreadId function', () => {
+        it('should return replies correctly', async () => {
+            const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
+            const userPayload = { id: 'user-123', username: 'dicoding' };
+            const threadPayload = {
+                id: 'thread-123',
+                title: 'dicoding',
+                body: 'dicoding',
+                owner: 'user-123',
+            };
+            const commentPayload = {
+                id: 'comment-123',
+                content: 'dicoding',
+                owner: 'user-123',
+                threadId: 'thread-123',
+            };
+            const replyPayload = {
+                id: 'reply-123',
+                content: 'dicoding',
+                owner: 'user-123',
+                commentId: 'comment-123',
+                threadId: 'thread-123',
+            };
+
+            await UsersTableTestHelper.addUser(userPayload);
+            await ThreadsTableTestHelper.addThread(threadPayload);
+            await CommentsTableTestHelper.addComment(commentPayload);
+            await ReplyTableTestHelper.addReply(replyPayload);
+
+            const replies = await replyRepositoryPostgres.getCommentRepliesByThreadId('thread-123');
+
+            expect(Array.isArray(replies)).toBe(true);
+            expect(replies).toHaveLength(1);
+        });
+    });
 });

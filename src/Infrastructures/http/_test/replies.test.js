@@ -85,11 +85,11 @@ describe('/threads endpoint', () => {
             });
 
             const responseThread = JSON.parse(thread.payload);
-            const { id } = responseThread.data.addedThread;
+            console.log(responseThread);
 
             const comment = await server.inject({
                 method: 'POST',
-                url: `/threads/${id}/comments`,
+                url: `/threads/${responseThread.data.addedThread.id}/comments`,
                 payload: {
                     content: 'Dicoding Indonesia',
                 },

@@ -62,7 +62,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -74,7 +74,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseThread = JSON.parse(thread.payload);
+            const responseThread = await JSON.parse(thread.payload);
 
             const comment = await server.inject({
                 method: 'POST',
@@ -85,7 +85,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseComment = JSON.parse(comment.payload);
+            const responseComment = await JSON.parse(comment.payload);
 
             // Action
             const response = await server.inject({
@@ -127,7 +127,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -139,7 +139,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseThread = JSON.parse(thread.payload);
+            const responseThread = await JSON.parse(thread.payload);
 
             const comment = await server.inject({
                 method: 'POST',
@@ -150,7 +150,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseComment = JSON.parse(comment.payload);
+            const responseComment = await JSON.parse(comment.payload);
 
             // Action
             const response = await server.inject({
@@ -194,7 +194,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
 
             // Action
@@ -239,7 +239,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -251,7 +251,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseThread = JSON.parse(thread.payload);
+            const responseThread = await JSON.parse(thread.payload);
 
             // Action
             const response = await server.inject({
@@ -295,7 +295,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -307,7 +307,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseThread = JSON.parse(thread.payload);
+            const responseThread = await JSON.parse(thread.payload);
 
             const comment = await server.inject({
                 method: 'POST',
@@ -318,7 +318,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseComment = JSON.parse(comment.payload);
+            const responseComment = await JSON.parse(comment.payload);
 
             // Action
             const response = await server.inject({
@@ -395,7 +395,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -407,7 +407,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const threadResponse = JSON.parse(thread.payload);
+            const threadResponse = await JSON.parse(thread.payload);
 
             const comment = await server.inject({
                 method: 'POST',
@@ -418,7 +418,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const commentResponse = JSON.parse(comment.payload);
+            const commentResponse = await JSON.parse(comment.payload);
 
             const authentication2 = await server.inject({
                 method: 'POST',
@@ -426,7 +426,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload2,
             });
 
-            const responseAuth2 = JSON.parse(authentication2.payload);
+            const responseAuth2 = await JSON.parse(authentication2.payload);
 
             const reply = await server.inject({
                 method: 'POST',
@@ -437,7 +437,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const replyResponse = JSON.parse(reply.payload);
+            const replyResponse = await JSON.parse(reply.payload);
 
             // Action
             const response = await server.inject({
@@ -478,7 +478,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -490,7 +490,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseThread = JSON.parse(thread.payload);
+            const responseThread = await JSON.parse(thread.payload);
 
             const comment = await server.inject({
                 method: 'POST',
@@ -501,7 +501,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseComment = JSON.parse(comment.payload);
+            const responseComment = await JSON.parse(comment.payload);
 
             // Action
             const response = await server.inject({
@@ -518,8 +518,8 @@ describe('/threads endpoint', () => {
         });
 
         it('should response 200 if reply deleted', async () => {
-              // Arrange
-              const loginPayload = {
+            // Arrange
+            const loginPayload = {
                 username: 'dicoding',
                 password: 'secret',
             };
@@ -542,7 +542,7 @@ describe('/threads endpoint', () => {
                 payload: loginPayload,
             });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            const responseAuth = await JSON.parse(authentication.payload);
 
             const thread = await server.inject({
                 method: 'POST',
@@ -554,7 +554,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseThread = JSON.parse(thread.payload);
+            const responseThread = await JSON.parse(thread.payload);
 
             const comment = await server.inject({
                 method: 'POST',
@@ -565,7 +565,7 @@ describe('/threads endpoint', () => {
                 headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
             });
 
-            const responseComment = JSON.parse(comment.payload);
+            const responseComment = await JSON.parse(comment.payload);
 
             const reply = await server.inject({
                 method: 'POST',

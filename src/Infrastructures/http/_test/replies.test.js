@@ -8,9 +8,63 @@ const createServer = require('../createServer');
 
 describe('/threads endpoint', () => {
     let server;
+    let loginPayload;
+    let authentication;
+    let responseAuth;
+    let thread;
+    let responseThread;
+    let comment;
+    let responseComment;
+
 
     beforeEach(async () => {
         server = await createServer(container);
+
+        loginPayload = {
+            username: 'dicoding',
+            password: 'secret',
+        };
+
+        await server.inject({
+            method: 'POST',
+            url: '/users',
+            payload: {
+                username: 'dicoding',
+                password: 'secret',
+                fullname: 'Dicoding Indonesia',
+            },
+        });
+
+        authentication = await server.inject({
+            method: 'POST',
+            url: '/authentications',
+            payload: loginPayload,
+        });
+
+        responseAuth = JSON.parse(authentication.payload);
+
+        thread = await server.inject({
+            method: 'POST',
+            url: '/threads',
+            payload: {
+                title: 'Dicoding',
+                body: 'Dicoding Indonesia',
+            },
+            headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+        });
+
+        responseThread = JSON.parse(thread.payload);
+
+        comment = await server.inject({
+            method: 'POST',
+            url: `/threads/${responseThread.data.addedThread.id}/comments`,
+            payload: {
+                content: 'Dicoding Indonesia',
+            },
+            headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+        });
+
+        responseComment = JSON.parse(comment.payload);
     });
 
     afterEach(async () => {
@@ -48,55 +102,54 @@ describe('/threads endpoint', () => {
         });
 
         it('should response 400 if payload not contain needed property', async () => {
-            // Arrange
-            const loginPayload = {
-                username: 'dicoding',
-                password: 'secret',
-            };
+            // // Arrange
+            // const loginPayload = {
+            //     username: 'dicoding',
+            //     password: 'secret',
+            // };
 
-            // const server = await createServer(container);
+            // // const server = await createServer(container);
 
-            await server.inject({
-                method: 'POST',
-                url: '/users',
-                payload: {
-                    username: 'dicoding',
-                    password: 'secret',
-                    fullname: 'Dicoding Indonesia',
-                },
-            });
+            // await server.inject({
+            //     method: 'POST',
+            //     url: '/users',
+            //     payload: {
+            //         username: 'dicoding',
+            //         password: 'secret',
+            //         fullname: 'Dicoding Indonesia',
+            //     },
+            // });
 
-            const authentication = await server.inject({
-                method: 'POST',
-                url: '/authentications',
-                payload: loginPayload,
-            });
+            // const authentication = await server.inject({
+            //     method: 'POST',
+            //     url: '/authentications',
+            //     payload: loginPayload,
+            // });
 
-            const responseAuth = JSON.parse(authentication.payload);
+            // const responseAuth = JSON.parse(authentication.payload);
 
-            const thread = await server.inject({
-                method: 'POST',
-                url: '/threads',
-                payload: {
-                    title: 'Dicoding',
-                    body: 'Dicoding Indonesia',
-                },
-                headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
-            });
+            // const thread = await server.inject({
+            //     method: 'POST',
+            //     url: '/threads',
+            //     payload: {
+            //         title: 'Dicoding',
+            //         body: 'Dicoding Indonesia',
+            //     },
+            //     headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+            // });
 
-            const responseThread = JSON.parse(thread.payload);
-            console.log(responseThread);
+            // const responseThread = JSON.parse(thread.payload);
 
-            const comment = await server.inject({
-                method: 'POST',
-                url: `/threads/${responseThread.data.addedThread.id}/comments`,
-                payload: {
-                    content: 'Dicoding Indonesia',
-                },
-                headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
-            });
+            // const comment = await server.inject({
+            //     method: 'POST',
+            //     url: `/threads/${responseThread.data.addedThread.id}/comments`,
+            //     payload: {
+            //         content: 'Dicoding Indonesia',
+            //     },
+            //     headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
+            // });
 
-            const responseComment = JSON.parse(comment.payload);
+            // const responseComment = JSON.parse(comment.payload);
 
             // Action
             const response = await server.inject({

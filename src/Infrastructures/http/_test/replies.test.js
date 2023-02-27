@@ -518,8 +518,8 @@ describe('/threads endpoint', () => {
         });
 
         it('should response 200 if reply deleted', async () => {
-              // Arrange
-              const loginPayload = {
+            // Arrange
+            const loginPayload = {
                 username: 'dicoding',
                 password: 'secret',
             };

@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 exports.up = pgm => {
     pgm.addConstraint('thread', 'fk_thread.ownerId', 'FOREIGN KEY("ownerId") REFERENCES users(id) ON DELETE CASCADE');
     pgm.addConstraint('comment', 'fk_comment.ownerId', 'FOREIGN KEY("ownerId") REFERENCES users(id) ON DELETE CASCADE');

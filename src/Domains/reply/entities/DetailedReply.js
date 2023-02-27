@@ -1,31 +1,23 @@
 class DetailedReply {
     constructor(payload) {
         this._verifyPayload(payload);
-        const replies = this._remapDeletedProperty(payload);
-        this.reply = replies;
+        const { id, content, date, username, is_deleted } = payload;
+        this.id = id;
+        this.date = date;
+        this.username = username;
+        this.content = is_deleted ? '**balasan telah dihapus**' : content;
     }
 
     _verifyPayload(payload) {
-        const { reply } = payload;
+        const { id, content, date, username, commentId } = payload;
 
-        if (!reply) {
+        if (!id || !content || !date || !username || !commentId) {
             throw new Error('DETAILED_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
         }
 
-        if (!Array.isArray(reply)) {
+        if (typeof id !== 'string' || typeof content !== 'string' || typeof date !== 'string' || typeof username !== 'string' || typeof commentId !== 'string') {
             throw new Error('DETAILED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
         }
-    }
-
-    _remapDeletedProperty(payload) {
-        const { reply } = payload;
-        return reply.map((replies) => ({
-            id: replies.id,
-            content: replies.is_deleted ? '**balasan telah dihapus**' : replies.content,
-            username: replies.username,
-            date: replies.date,
-        }));
-
     }
 }
 

@@ -10,7 +10,11 @@ describe('a DetailedComment entities', () => {
 
     it('should throw error when payload did not meet data type specification', () => {
         const payload = {
-            comment: {},
+            id: 123,
+            content: 123,
+            date: 123,
+            username: 123,
+            is_deleted: 123,
         };
 
         expect(() => new DetailedComment(payload)).toThrowError('DETAILED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
@@ -18,64 +22,43 @@ describe('a DetailedComment entities', () => {
 
     it('should remap deleted property correctly', () => {
         const payload = {
-            comment: [
-                {
-                    id: 'comment-_pby2_tmXV6bcvcdev8xk',
-                    username: 'johndoe',
-                    date: '2021-08-08T07:22:33.555Z',
-                    content: 'sebuah comment',
-                    is_deleted: false,
-                },
-                {
-                    id: 'comment-yksuCoxM2s4MMrZJO-qVD',
-                    username: 'dicoding',
-                    date: '2021-08-08T07:26:21.338Z',
-                    content: 'komentar yang lain tapi udah dihapus',
-                    is_deleted: true,
-                },
-            ],
+            id: 'comment-_pby2_tmXV6bcvcdev8xk',
+            username: 'johndoe',
+            date: '2021-08-08T07:22:33.555Z',
+            content: 'sebuah comment',
+            is_deleted: true,
         };
 
-        const { comment } = new DetailedComment(payload);
+        const comment = new DetailedComment(payload);
 
-        const expectedComment = [
-            {
-                id: 'comment-_pby2_tmXV6bcvcdev8xk',
-                username: 'johndoe',
-                date: '2021-08-08T07:22:33.555Z',
-                content: 'sebuah comment',
-            },
-            {
-                id: 'comment-yksuCoxM2s4MMrZJO-qVD',
-                username: 'dicoding',
-                date: '2021-08-08T07:26:21.338Z',
-                content: '**komentar telah dihapus**',
-            },
-        ];
+        const expectedComment = {
+            id: 'comment-_pby2_tmXV6bcvcdev8xk',
+            username: 'johndoe',
+            date: '2021-08-08T07:22:33.555Z',
+            content: '**komentar telah dihapus**',
+        }
 
         expect(comment).toEqual(expectedComment);
     });
 
     it('should create DetailedComment object correctly', () => {
         const payload = {
-            comment: [
-                {
-                    id: 'comment-_pby2_tmXV6bcvcdev8xk',
-                    username: 'johndoe',
-                    date: '2021-08-08T07:22:33.555Z',
-                    content: 'sebuah comment',
-                },
-                {
-                    id: 'comment-yksuCoxM2s4MMrZJO-qVD',
-                    username: 'dicoding',
-                    date: '2021-08-08T07:26:21.338Z',
-                    content: '**komentar telah dihapus**',
-                },
-            ],
+            id: 'comment-_pby2_tmXV6bcvcdev8xk',
+            username: 'johndoe',
+            date: '2021-08-08T07:22:33.555Z',
+            content: 'sebuah comment',
+            is_deleted: false,
         };
 
-        const { comment } = new DetailedComment(payload);
+        const comment = new DetailedComment(payload);
 
-        expect(comment).toEqual(payload.comment);
+        const expectedComment = {
+            id: 'comment-_pby2_tmXV6bcvcdev8xk',
+            username: 'johndoe',
+            date: '2021-08-08T07:22:33.555Z',
+            content: 'sebuah comment',
+        }
+
+        expect(comment).toEqual(expectedComment);
     });
 });

@@ -1,32 +1,26 @@
 class DetailedComment {
     constructor(payload) {
         this._verifyPayload(payload);
-        const comments = this._remapDeletedProperty(payload);
-        this.comment = comments;
+        const { id, username, date, content, is_deleted, replies } = payload;
+        this.id = id
+        this.username = username
+        this.date = date
+        this.content = is_deleted ? '**komentar telah dihapus**' : content
+        this.replies = replies
     }
 
     _verifyPayload(payload) {
-        const { comment } = payload;
+        const { id, username, date, content } = payload;
 
-        if (!comment) {
+        if (!id || !username || !date || !content ) {
             throw new Error('DETAILED_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
         }
 
-        if (!Array.isArray(comment)) {
+        if (typeof id !== 'string' || typeof username !== 'string' || typeof date !== 'string' || typeof content !== 'string') {
             throw new Error('DETAILED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
         }
     }
 
-    _remapDeletedProperty(payload) {
-        const { comment } = payload;
-        return comment.map((comments) => ({
-            id: comments.id,
-            content: comments.is_deleted ? '**komentar telah dihapus**' : comments.content,
-            username: comments.username,
-            date: comments.date,
-        }));
-
-    }
 }
 
 module.exports = DetailedComment;

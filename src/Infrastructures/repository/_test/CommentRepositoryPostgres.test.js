@@ -118,6 +118,7 @@ describe('CommentRepositoryPostgres', () => {
                         content: 'dicoding',
                         owner: userPayload.id,
                         threadId: threadPayload.id,
+                        date: new Date().toISOString(),
                     };
 
                     await UsersTableTestHelper.addUser(userPayload);
@@ -126,11 +127,15 @@ describe('CommentRepositoryPostgres', () => {
 
                     const comments = await commentRepositoryPostgres.getCommentsThread(threadPayload.id);
 
-                    expect(Array.isArray(comments)).toBe(true);
-                    expect(comments[0].id).toEqual(commentPayload.id);
-                    expect(comments[0].content).toEqual(commentPayload.content);
-                    expect(comments[0].username).toEqual(userPayload.username);
-                    expect(comments[0].date).toBeDefined();
+                    expect(comments).toStrictEqual([
+                        {
+                            id: 'comment-123',
+                            content: 'dicoding',
+                            is_deleted: false,
+                            username: 'dicoding',
+                            date: commentPayload.date
+                        }
+                    ])
                 });
             });
         });

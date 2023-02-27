@@ -34,10 +34,6 @@ describe('AddCommentUseCase', () => {
 
         expect(mockThreadRepository.checkAvailabilityThread).toBeCalledWith(useCasePayload.threadId);
         expect(postedComment).toStrictEqual(expectedAddedComment);
-        expect(mockCommentRepository.addComment).toBeCalledWith(new PostComment({
-            threadId: useCasePayload.threadId,
-            content: useCasePayload.content,
-            owner: useCasePayload.owner,
-        }));
+        expect(mockCommentRepository.addComment).toBeCalledWith(new PostComment(useCasePayload));
     });
 });

@@ -10,7 +10,7 @@ class DeleteCommentUseCase {
         await this._threadRepository.checkAvailabilityThread(threadId);
         await this._commentRepository.checkAvailabilityComment(commentId);
         await this._commentRepository.verifyCommentOwner(commentId, owner);
-        return this._commentRepository.deleteComment(commentId);
+        this._commentRepository.deleteComment(commentId);
     }
 
     _verifyPayload(payload) {

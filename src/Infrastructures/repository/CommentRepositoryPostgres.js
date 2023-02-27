@@ -23,7 +23,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
         const result = await this._pool.query(query);
 
-        return new PostedComment({ ...result.rows[0] });
+        return new PostedComment(result.rows[0]);
     }
 
     async checkAvailabilityComment(id) {

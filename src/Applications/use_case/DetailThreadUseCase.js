@@ -16,9 +16,9 @@ class DetailThreadUseCase {
         const getCommentsThread = await this._commentRepository.getCommentsThread(threadId);
         const getRepliesComment = await this._replyRepository.getCommentRepliesByThreadId(threadId);
 
-        detailThread.comments = new DetailedComment({ comment: getCommentsThread }).comment;
-        detailThread.comments.forEach((comment) => {
-            comment.replies = new DetailedReply({ reply: getRepliesComment }).reply;
+        detailThread.comments = getCommentsThread.map((comment) => {
+            comment.replies = getRepliesComment.filter((filtered) => filtered.commentId === comment.id).map((reply) => new DetailedReply(reply));
+            return new DetailedComment(comment);
         });
 
         return {

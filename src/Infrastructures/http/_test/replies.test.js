@@ -7,12 +7,6 @@ const container = require('../../container');
 const createServer = require('../createServer');
 
 describe('/threads endpoint', () => {
-    let server;
-
-    beforeEach(async () => {
-        server = await createServer(container);
-    });
-
     afterEach(async () => {
         await server.stop();
     });
@@ -31,7 +25,7 @@ describe('/threads endpoint', () => {
     describe('when POST /threads/{threadId}/comments/{commentId}/replies', () => {
         it('should response 401 if payload not access token', async () => {
             // Arrange
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             // Action
             const response = await server.inject({
@@ -54,7 +48,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -119,7 +113,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -186,7 +180,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -231,7 +225,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -287,7 +281,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -351,7 +345,7 @@ describe('/threads endpoint', () => {
     describe('when DELETE /threads/{threadId}/comments/{commentId}/replies', () => {
         it('should response 401 if request not contain Authorization', async () => {
             // Arrange
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             // Action
             const response = await server.inject({
@@ -377,7 +371,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -470,7 +464,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',
@@ -534,7 +528,7 @@ describe('/threads endpoint', () => {
                 password: 'secret',
             };
 
-            // const server = await createServer(container);
+            const server = await createServer(container);
 
             await server.inject({
                 method: 'POST',

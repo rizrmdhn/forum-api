@@ -8,10 +8,6 @@ const createServer = require('../createServer');
 
 describe('/threads endpoint', () => {
     afterEach(async () => {
-        await server.stop();
-    });
-
-    afterEach(async () => {
         await ReplyTableTestHelper.cleanTable();
         await CommentsTableTestHelper.cleanTable();
         await ThreadsTableTestHelper.cleanTable();

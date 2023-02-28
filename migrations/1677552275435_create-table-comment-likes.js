@@ -12,9 +12,13 @@ exports.up = pgm => {
             type: 'VARCHAR(50)',
             notNull: true,
         },
+        threadId: {
+            type: 'VARCHAR(50)',
+            notNull: true,
+        },
     });
 };
 
 exports.down = pgm => {
     pgm.dropTable('user_comment_likes');
- };
+};

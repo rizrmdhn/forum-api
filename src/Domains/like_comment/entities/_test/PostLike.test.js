@@ -1,10 +1,9 @@
-const PostLike = require('./PostLike');
+const PostLike = require('../PostLike');
 
 describe('a PostLike entities', () => {
     it('should throw error when payload did not contain needed property', () => {
         // Arrange
         const payload = {
-            id: 'user-123',
         };
 
         // Action and Assert
@@ -14,8 +13,8 @@ describe('a PostLike entities', () => {
     it('should throw error when payload did not meet data type specification', () => {
         // Arrange
         const payload = {
-            id: 'user-123',
             commentId: 123,
+            threadId: 123,
             userId: 123,
         };
 
@@ -26,17 +25,15 @@ describe('a PostLike entities', () => {
     it('should create PostLike object correctly', () => {
         // Arrange
         const payload = {
-            id: 'user-123',
             commentId: 'comment-123',
             threadId: 'thread-123',
             userId: 'user-123',
         };
 
         // Action
-        const { id, commentId, threadId ,userId } = new PostLike(payload);
+        const { commentId, threadId ,userId } = new PostLike(payload);
 
         // Assert
-        expect(id).toEqual(payload.id);
         expect(commentId).toEqual(payload.commentId);
         expect(threadId).toEqual(payload.threadId);
         expect(userId).toEqual(payload.userId);

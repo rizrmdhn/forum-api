@@ -24,6 +24,9 @@ const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgre
 const ReplyRepository = require('../Domains/reply/ReplyRepository');
 const ReplyRepositoryPostgres = require('./repository/ReplyRepositoryPostgres');
 
+const LikeCommentRepository = require('../Domains/like_comment/LikeCommentRepository');
+const LikeCommentRepositoryPostgres = require('./repository/LikeCommentRepositoryPostgres');
+
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
@@ -39,6 +42,7 @@ const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseC
 const DetailThreadUseCase = require('../Applications/use_case/DetailThreadUseCase');
 const AddReplyUseCase = require('../Applications/use_case/AddReplyUseCase');
 const DeleteReplyUseCase = require('../Applications/use_case/DeleteReplyUseCase');
+const AddLikeCommentUseCase = require('../Applications/use_case/AddLikeCommentUseCase');
 
 
 // creating container
@@ -124,6 +128,20 @@ container.register([
     {
         key: ReplyRepository.name,
         Class: ReplyRepositoryPostgres,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool,
+                },
+                {
+                    concrete: nanoid,
+                },
+            ],
+        },
+    },
+    {
+        key: LikeCommentRepository.name,
+        Class: LikeCommentRepositoryPostgres,
         parameter: {
             dependencies: [
                 {
@@ -276,6 +294,10 @@ container.register([
                     name: 'replyRepository',
                     internal: ReplyRepository.name,
                 },
+                {
+                    name: 'likeCommentRepository',
+                    internal: LikeCommentRepository.name,
+                },
             ],
         },
     },
@@ -309,6 +331,27 @@ container.register([
                 {
                     name: 'replyRepository',
                     internal: ReplyRepository.name,
+                },
+                {
+                    name: 'commentRepository',
+                    internal: CommentRepository.name,
+                },
+                {
+                    name: 'threadRepository',
+                    internal: ThreadRepository.name,
+                },
+            ],
+        },
+    },
+    {
+        key: AddLikeCommentUseCase.name,
+        Class: AddLikeCommentUseCase,
+        parameter: {
+            injectType: 'destructuring',
+            dependencies: [
+                {
+                    name: 'likeCommentRepository',
+                    internal: LikeCommentRepository.name,
                 },
                 {
                     name: 'commentRepository',

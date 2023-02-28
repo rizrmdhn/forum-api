@@ -34,6 +34,10 @@ DomainErrorTranslator._directories = {
     'POSTED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menambahkan balasan baru karena tipe data tidak sesuai'),
     'DETAILED_REPLY.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menambahkan balasan baru karena properti yang dibutuhkan tidak ada'),
     'DETAILED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menambahkan balasan baru karena tipe data tidak sesuai'),
+    'POST_LIKE.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menambahkan like karena properti yang dibutuhkan tidak ada'),
+    'POST_LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menambahkan like karena tipe data tidak sesuai'),
+    'POSTED_LIKE.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menambahkan like karena properti yang dibutuhkan tidak ada'),
+    'POSTED_LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menambahkan like karena tipe data tidak sesuai'),
 };
 
 

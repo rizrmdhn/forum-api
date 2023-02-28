@@ -1,6 +1,7 @@
 const CommentRepository = require('../../../Domains/comment/CommentRepository');
 const ThreadRepository = require('../../../Domains/thread/ThreadRepository');
 const ReplyRepository = require('../../../Domains/reply/ReplyRepository');
+const LikeCommentRepository = require('../../../Domains/like_comment/LikeCommentRepository');
 const DetailThreadUseCase = require('../DetailThreadUseCase');
 
 describe('DetailThreadUseCase', () => {
@@ -34,9 +35,44 @@ describe('DetailThreadUseCase', () => {
             },
         ];
 
+        const useCaseReply = [
+            {
+                id: 'reply-123',
+                username: 'dicoding',
+                date: '2021-08-08 14.00',
+                content: 'sebuah reply',
+                commentId: 'comment-123',
+                is_deleted: false,
+            },
+            {
+                id: 'reply-123',
+                username: 'dicoding',
+                date: '2021-08-08 14.00',
+                content: 'sebuah reply',
+                commentId: 'comment-123',
+                is_deleted: true,
+            },
+        ];
+
+        const useCaseLikeComment = [
+            {
+                id: 'like-comment-123',
+                commentId: 'comment-123',
+                threadId: 'thread-h_123',
+                userId: 'user-123',
+            },
+            {
+                id: 'like-comment-123',
+                commentId: 'comment-123',
+                threadId: 'thread-h_123',
+                userId: 'user-321',
+            },
+        ];
+
         const mockThreadRepository = new ThreadRepository();
         const mockCommentRepository = new CommentRepository();
         const mockReplyRepository = new ReplyRepository();
+        const mockLikeCommentRepository = new LikeCommentRepository();
 
         mockThreadRepository.checkAvailabilityThread = jest.fn(() => Promise.resolve());
         mockThreadRepository.getDetailThread = jest.fn()
@@ -44,41 +80,20 @@ describe('DetailThreadUseCase', () => {
         mockCommentRepository.getCommentsThread = jest.fn()
             .mockImplementation(() => Promise.resolve(useCaseComment));
         mockReplyRepository.getCommentRepliesByThreadId = jest.fn()
-            .mockImplementation(() => Promise.resolve([]));
+            .mockImplementation(() => Promise.resolve(useCaseReply));
+        mockLikeCommentRepository.getNumberOfLikedComments = jest.fn()
+            .mockImplementation(() => Promise.resolve(useCaseLikeComment));
 
         const detailThreadUseCase = new DetailThreadUseCase({
             threadRepository: mockThreadRepository,
             commentRepository: mockCommentRepository,
             replyRepository: mockReplyRepository,
+            likeCommentRepository: mockLikeCommentRepository,
         });
 
-
-        const expectedThread = {
-            id: 'thread-h_123',
-            title: 'sebuah thread',
-            body: 'sebuah body thread',
-            date: '2021-08-08 14.00',
-            username: 'dicoding',
-        };
-
-        const expectedComment = [
-            {
-                id: 'comment-123',
-                username: 'dicoding',
-                date: '2021-08-08 14.00',
-                content: 'sebuah comment',
-                replies: [],
-            },
-            {
-                id: 'comment-123',
-                username: 'dicoding',
-                date: '2021-08-08 14.00',
-                content: "**komentar telah dihapus**",
-                replies: [],
-            },
-        ];
-
         const detailThread = await detailThreadUseCase.execute(useCasePayload);
+
+        const expectedThread = await mockThreadRepository.getDetailThread(useCasePayload.threadId);
 
         expect(mockThreadRepository.getDetailThread)
             .toHaveBeenCalledWith(useCasePayload.threadId);
@@ -86,11 +101,8 @@ describe('DetailThreadUseCase', () => {
             .toHaveBeenCalledWith(useCasePayload.threadId);
         expect(mockReplyRepository.getCommentRepliesByThreadId)
             .toHaveBeenCalledWith(useCasePayload.threadId);
-        expect(detailThread.thread.id).toEqual(expectedThread.id);
-        expect(detailThread.thread.title).toEqual(expectedThread.title);
-        expect(detailThread.thread.body).toEqual(expectedThread.body);
-        expect(detailThread.thread.date).toEqual(expectedThread.date);
-        expect(detailThread.thread.username).toEqual(expectedThread.username);
-        expect(detailThread.thread.comments).toEqual(expectedComment);
+        expect(mockLikeCommentRepository.getNumberOfLikedComments)
+            .toHaveBeenCalledWith(useCasePayload.threadId);
+        expect(detailThread).toStrictEqual({ thread: expectedThread });
     });
 });

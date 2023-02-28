@@ -23,7 +23,7 @@ jobs:
     - name: npm install migrate and test
       run: |
         npm install
-        npm run migrate down {N}
+        npm run migrate down 7
         npm run migrate up
         npm run test
       env:

@@ -12,10 +12,6 @@ exports.up = pgm => {
             type: 'VARCHAR(50)',
             notNull: true,
         },
-        threadId: {
-            type: 'VARCHAR(50)',
-            notNull: true,
-        },
     });
 };
 

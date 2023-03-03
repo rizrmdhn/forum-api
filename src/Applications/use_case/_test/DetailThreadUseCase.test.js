@@ -3,6 +3,9 @@ const ThreadRepository = require('../../../Domains/thread/ThreadRepository');
 const ReplyRepository = require('../../../Domains/reply/ReplyRepository');
 const LikeCommentRepository = require('../../../Domains/like_comment/LikeCommentRepository');
 const DetailThreadUseCase = require('../DetailThreadUseCase');
+const DetailThread = require('../../../Domains/thread/entities/DetailThread');
+const DetailedComment = require('../../../Domains/comment/entities/DetailedComment');
+const DetailedReply = require('../../../Domains/reply/entities/DetailedReply');
 
 describe('DetailThreadUseCase', () => {
     it('should orchestrating the detail thread action correctly', async () => {
@@ -69,6 +72,31 @@ describe('DetailThreadUseCase', () => {
             },
         ];
 
+        const expectedThread = {
+            id: useCaseThread.id,
+            title: useCaseThread.title,
+            body: useCaseThread.body,
+            date: useCaseThread.date,
+            username: useCaseThread.username,
+            comments: useCaseComment.map((comment) => new DetailedComment({
+                id: comment.id,
+                username: comment.username,
+                date: comment.date,
+                content: comment.content,
+                is_deleted: comment.is_deleted,
+                likeCount: useCaseLikeComment.filter((like) => like.commentId === comment.id).length,
+                replies: useCaseReply.filter((reply) => reply.commentId === comment.id).map((reply) => new DetailedReply({
+                    id: reply.id,
+                    username: reply.username,
+                    date: reply.date,
+                    content: reply.content,
+                    is_deleted: reply.is_deleted,
+                    commentId: reply.commentId,
+                })),
+            })),
+        };
+
+
         const mockThreadRepository = new ThreadRepository();
         const mockCommentRepository = new CommentRepository();
         const mockReplyRepository = new ReplyRepository();
@@ -93,8 +121,6 @@ describe('DetailThreadUseCase', () => {
 
         const detailThread = await detailThreadUseCase.execute(useCasePayload);
 
-        const expectedThread = await mockThreadRepository.getDetailThread(useCasePayload.threadId);
-
         expect(mockThreadRepository.getDetailThread)
             .toHaveBeenCalledWith(useCasePayload.threadId);
         expect(mockCommentRepository.getCommentsThread)
@@ -103,6 +129,6 @@ describe('DetailThreadUseCase', () => {
             .toHaveBeenCalledWith(useCasePayload.threadId);
         expect(mockLikeCommentRepository.getNumberOfLikedComments)
             .toHaveBeenCalledWith(useCasePayload.threadId);
-        expect(detailThread).toStrictEqual({ thread: expectedThread });
+        expect(detailThread).toEqual({ thread: expectedThread });
     });
 });

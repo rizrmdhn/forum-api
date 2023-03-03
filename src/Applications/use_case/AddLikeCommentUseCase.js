@@ -14,7 +14,7 @@ class AddLikeCommentUseCase {
         const isLiked = await this._likeCommentRepository.checkIsLiked(useCasePayload.commentId, useCasePayload.userId);
 
         if (!isLiked) {
-            return await this._likeCommentRepository.addLikeComment(postLike);
+           await this._likeCommentRepository.addLikeComment(postLike);
         }
 
         return this._likeCommentRepository.deleteLikeComment(useCasePayload.commentId, useCasePayload.userId);

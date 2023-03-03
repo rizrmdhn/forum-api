@@ -9,6 +9,7 @@ class LikeCommentRepositoryPostgres extends LikeCommentRepository {
         this._pool = pool;
         this._idGenerator = idGenerator;
     }
+    
     async addLikeComment(newLikeComment) {
         const { commentId, userId, threadId } = newLikeComment;
         const id = `like-comment-${this._idGenerator()}`;
